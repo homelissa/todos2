@@ -28,7 +28,7 @@ class TodoForm extends React.Component {
 
   render() {
     return(
-      <form onSubmit={this.handleSubmit}>
+      <form className='todo-form' onSubmit={this.handleSubmit}>
         <label>Title:
           <input
             placeholder='buy milk'
@@ -45,7 +45,7 @@ class TodoForm extends React.Component {
           </textarea>
         </label>
 
-        <button>Create New Todo</button>
+        <button className='create-todo-button'>Create New Todo</button>
 
       </form>
     )

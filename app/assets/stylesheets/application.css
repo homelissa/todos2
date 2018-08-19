@@ -13,3 +13,27 @@
  *= require_tree .
  *= require_self
  */
+
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif');
+
+* {
+  font: 'Noto Serif';
+}
+
+#root {
+  margin-left: 50px;
+}
+
+.todo-list-item{
+  display: flex;
+}
+
+.todo-form {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.create-todo-button {
+  max-width: 200px;
+}
