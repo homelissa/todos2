@@ -99,6 +99,14 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.createTodo = exports.fetchTodo = exports.fetchTodos = exports.removeTodo = exports.receiveTodo = exports.receiveTodos = exports.REMOVE_TODO = exports.RECEIVE_TODO = exports.RECEIVE_TODOS = undefined;
+
+var _todo_api_util = __webpack_require__(/*! ../util/todo_api_util */ "./frontend/util/todo_api_util.js");
+
+var TodoAPIUtil = _interopRequireWildcard(_todo_api_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 var RECEIVE_TODOS = exports.RECEIVE_TODOS = 'RECEIVE_TODOS';
 var RECEIVE_TODO = exports.RECEIVE_TODO = 'RECEIVE_TODO';
 var REMOVE_TODO = exports.REMOVE_TODO = 'REMOVE_TODO';
@@ -121,6 +129,30 @@ var removeTodo = exports.removeTodo = function removeTodo(todo) {
   return {
     type: REMOVE_TODO,
     todo: todo
+  };
+};
+
+var fetchTodos = exports.fetchTodos = function fetchTodos() {
+  return function (dispatch) {
+    return TodoAPIUtil.fetchTodos().then(function (todos) {
+      return dispatch(receiveTodos(todos));
+    });
+  };
+};
+
+var fetchTodo = exports.fetchTodo = function fetchTodo(id) {
+  return function (dispatch) {
+    return TodoAPIUtil.fetchTodo(id).then(function (todo) {
+      return dispatch(receiveTodo(todo));
+    });
+  };
+};
+
+var createTodo = exports.createTodo = function createTodo(todo) {
+  return function (dispatch) {
+    return TodoAPIUtil.createTodo(todo).then(function (todo) {
+      return dispatch(receiveTodo(todo));
+    });
   };
 };
 
@@ -358,6 +390,11 @@ var TodoList = function (_React$Component) {
   }
 
   _createClass(TodoList, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.requestTodos();
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
@@ -440,6 +477,12 @@ var mDTP = function mDTP(dispatch) {
     },
     removeTodo: function removeTodo(todo) {
       return dispatch((0, _todo_actions.removeTodo)(todo));
+    },
+    requestTodos: function requestTodos() {
+      return dispatch((0, _todo_actions.fetchTodos)());
+    },
+    createTodo: function createTodo(todo) {
+      return dispatch((0, _todo_actions.createTodo)(todo));
     }
   };
 };
@@ -513,6 +556,36 @@ var TodoListItem = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = TodoListItem;
+
+/***/ }),
+
+/***/ "./frontend/middleware/thunk_middleware.js":
+/*!*************************************************!*\
+  !*** ./frontend/middleware/thunk_middleware.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var thunkMiddleware = function thunkMiddleware(_ref) {
+  var dispatch = _ref.dispatch,
+      getState = _ref.getState;
+  return function (next) {
+    return function (action) {
+      if (typeof action === 'function') {
+        return action(dispatch, getState);
+      }
+      return next(action);
+    };
+  };
+};
+
+exports.default = thunkMiddleware;
 
 /***/ }),
 
@@ -646,16 +719,16 @@ var _root_reducer = __webpack_require__(/*! ../reducers/root_reducer */ "./front
 
 var _root_reducer2 = _interopRequireDefault(_root_reducer);
 
+var _thunk_middleware = __webpack_require__(/*! ../middleware/thunk_middleware */ "./frontend/middleware/thunk_middleware.js");
+
+var _thunk_middleware2 = _interopRequireDefault(_thunk_middleware);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var configureStore = function configureStore() {
   var preloadedState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-  var store = (0, _redux.createStore)(_root_reducer2.default, preloadedState);
-  store.subscribe(function () {
-    localStorage.state = JSON.stringify(store.getState());
-  });
-  return store;
+  return (0, _redux.createStore)(_root_reducer2.default, preloadedState, (0, _redux.applyMiddleware)(_thunk_middleware2.default));
 };
 
 exports.default = configureStore;
@@ -734,6 +807,43 @@ exports.uniqueId = uniqueId;
 function uniqueId() {
   return new Date().getTime();
 }
+
+/***/ }),
+
+/***/ "./frontend/util/todo_api_util.js":
+/*!****************************************!*\
+  !*** ./frontend/util/todo_api_util.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var fetchTodos = exports.fetchTodos = function fetchTodos() {
+  return $.ajax({
+    method: 'GET',
+    url: '/api/todos'
+  });
+};
+
+var fetchTodo = exports.fetchTodo = function fetchTodo(id) {
+  return $.ajax({
+    method: 'GET',
+    url: '/api/todos/' + id
+  });
+};
+
+var createTodo = exports.createTodo = function createTodo(todo) {
+  return $.ajax({
+    method: 'POST',
+    url: '/api/todos',
+    data: todo
+  });
+};
 
 /***/ }),
 
