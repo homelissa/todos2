@@ -14,10 +14,14 @@
  *= require_self
  */
 
+
+
+
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif');
 
 * {
   font: 'Noto Serif';
+  text-decoration: none;
 }
 
 .todo-list {
