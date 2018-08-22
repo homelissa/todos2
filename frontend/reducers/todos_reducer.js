@@ -3,13 +3,11 @@ import merge from 'lodash/merge';
 
 const todosReducer = (state = {}, action) => {
   Object.freeze(state);
-  let nextState = {};
+  let nextState;
 
   switch(action.type) {
     case RECEIVE_TODOS:
-      action.todos.forEach(todo => {
-        nextState[action.id] = todo;
-      })
+      nextState = merge({}, state, action.todos)
       return nextState;
     case RECEIVE_TODO:
       let newTodo = { [action.todo.id]: action.todo};

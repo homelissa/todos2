@@ -19,3 +19,10 @@ export const createTodo = todo => (
     data: todo
   })
 );
+
+export const deleteTodo = todo => (
+ $.ajax({
+    method: 'DELETE',
+    url: `/api/todos/${todo.id}`
+  })
+);

@@ -1,34 +1,51 @@
 import { uniqueId } from '../../util/id_generator'
 import React from 'react';
+import TodoFormContainer from './todo_form_container';
 
 class TodoForm extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       title: "",
       body: ""
-    };
+    }
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  update(field) {
-    return e => this.setState({ [field]: e.target.value });
+  update(property) {
+   return e => this.setState({ [property]: e.target.value });
   }
 
   handleSubmit(e) {
-    e.preventDefault();
-    const todo = Object.assign({}, this.state, { id: uniqueId()});
-    this.props.receiveTodo(todo);
-    this.setState({
-      title: "",
-      body: ""
-    });
-  }
+   e.preventDefault();
+   const todo = Object.assign({}, this.state);
+   this.props.createTodo({ todo }).then(
+     () => this.setState({
+       title: "",
+       body: ""
+     })
+   );
+ }
+
+ // handleSubmit(e) {
+ //   e.preventDefault();
+ //
+ //   this.props.createTodo(this.state).then(
+ //     () => this.setState({
+ //       title: "",
+ //       body: ""
+ //     })
+ //   );
+ // }
+
 
   render() {
+
+
     return(
       <form className='todo-form' onSubmit={this.handleSubmit}>
+        <div className='todo-form-header'>Create New Todo!</div>
         <label>Title:
           <input
             placeholder='buy milk'
@@ -45,7 +62,7 @@ class TodoForm extends React.Component {
           </textarea>
         </label>
 
-        <button className='create-todo-button'>Create New Todo</button>
+        <button className='create-todo-button'>Create</button>
 
       </form>
     )

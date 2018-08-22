@@ -9,8 +9,8 @@ class TodoListItem extends React.Component {
   render() {
     return(
       <div className='todo-list-item'>
-        <li>{this.props.todo.title}</li>
-        <button onClick={ () => this.props.removeTodo(this.props.todo)}>Delete Todo</button>
+        <li className='todo-list-item-title'>{this.props.todo.title}</li>
+        <button onClick={ () => this.props.deleteTodo(this.props.todo)}>Delete Todo</button>
       </div>
     )
   }

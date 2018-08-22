@@ -99,7 +99,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createTodo = exports.fetchTodo = exports.fetchTodos = exports.removeTodo = exports.receiveTodo = exports.receiveTodos = exports.REMOVE_TODO = exports.RECEIVE_TODO = exports.RECEIVE_TODOS = undefined;
+exports.deleteTodo = exports.createTodo = exports.fetchTodo = exports.fetchTodos = exports.removeTodo = exports.receiveTodo = exports.receiveTodos = exports.REMOVE_TODO = exports.RECEIVE_TODO = exports.RECEIVE_TODOS = undefined;
 
 var _todo_api_util = __webpack_require__(/*! ../util/todo_api_util */ "./frontend/util/todo_api_util.js");
 
@@ -152,6 +152,14 @@ var createTodo = exports.createTodo = function createTodo(todo) {
   return function (dispatch) {
     return TodoAPIUtil.createTodo(todo).then(function (todo) {
       return dispatch(receiveTodo(todo));
+    });
+  };
+};
+
+var deleteTodo = exports.deleteTodo = function deleteTodo(todo) {
+  return function (dispatch) {
+    return TodoAPIUtil.deleteTodo(todo).then(function (todo) {
+      return dispatch(removeTodo(todo));
     });
   };
 };
@@ -323,6 +331,10 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _todo_form_container = __webpack_require__(/*! ./todo_form_container */ "./frontend/components/todos/todo_form_container.jsx");
+
+var _todo_form_container2 = _interopRequireDefault(_todo_form_container);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -352,30 +364,52 @@ var TodoForm = function (_React$Component) {
 
   _createClass(TodoForm, [{
     key: 'update',
-    value: function update(field) {
+    value: function update(property) {
       var _this2 = this;
 
       return function (e) {
-        return _this2.setState(_defineProperty({}, field, e.target.value));
+        return _this2.setState(_defineProperty({}, property, e.target.value));
       };
     }
   }, {
     key: 'handleSubmit',
     value: function handleSubmit(e) {
+      var _this3 = this;
+
       e.preventDefault();
-      var todo = Object.assign({}, this.state, { id: (0, _id_generator.uniqueId)() });
-      this.props.receiveTodo(todo);
-      this.setState({
-        title: "",
-        body: ""
+      var todo = Object.assign({}, this.state);
+      this.props.createTodo({ todo: todo }).then(function () {
+        return _this3.setState({
+          title: "",
+          body: ""
+        });
       });
     }
+
+    // handleSubmit(e) {
+    //   e.preventDefault();
+    //
+    //   this.props.createTodo(this.state).then(
+    //     () => this.setState({
+    //       title: "",
+    //       body: ""
+    //     })
+    //   );
+    // }
+
+
   }, {
     key: 'render',
     value: function render() {
+
       return _react2.default.createElement(
         'form',
         { className: 'todo-form', onSubmit: this.handleSubmit },
+        _react2.default.createElement(
+          'div',
+          { className: 'todo-form-header' },
+          'Create New Todo!'
+        ),
         _react2.default.createElement(
           'label',
           null,
@@ -397,7 +431,7 @@ var TodoForm = function (_React$Component) {
         _react2.default.createElement(
           'button',
           { className: 'create-todo-button' },
-          'Create New Todo'
+          'Create'
         )
       );
     }
@@ -409,6 +443,46 @@ var TodoForm = function (_React$Component) {
 ;
 
 exports.default = TodoForm;
+
+/***/ }),
+
+/***/ "./frontend/components/todos/todo_form_container.jsx":
+/*!***********************************************************!*\
+  !*** ./frontend/components/todos/todo_form_container.jsx ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _todo_actions = __webpack_require__(/*! ../../actions/todo_actions */ "./frontend/actions/todo_actions.js");
+
+var _todo_form = __webpack_require__(/*! ./todo_form */ "./frontend/components/todos/todo_form.jsx");
+
+var _todo_form2 = _interopRequireDefault(_todo_form);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mSTP = function mSTP(state) {
+  return {};
+};
+
+var mDTP = function mDTP(dispatch) {
+  return {
+    createTodo: function createTodo(todo) {
+      return dispatch((0, _todo_actions.createTodo)(todo));
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mSTP, mDTP)(_todo_form2.default);
 
 /***/ }),
 
@@ -436,9 +510,9 @@ var _todo_list_item = __webpack_require__(/*! ./todo_list_item */ "./frontend/co
 
 var _todo_list_item2 = _interopRequireDefault(_todo_list_item);
 
-var _todo_form = __webpack_require__(/*! ./todo_form */ "./frontend/components/todos/todo_form.jsx");
+var _todo_form_container = __webpack_require__(/*! ./todo_form_container */ "./frontend/components/todos/todo_form_container.jsx");
 
-var _todo_form2 = _interopRequireDefault(_todo_form);
+var _todo_form_container2 = _interopRequireDefault(_todo_form_container);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -467,19 +541,19 @@ var TodoList = function (_React$Component) {
     value: function render() {
       var _props = this.props,
           todos = _props.todos,
-          removeTodo = _props.removeTodo;
+          deleteTodo = _props.deleteTodo;
 
       var todoItems = todos.map(function (todo) {
         return _react2.default.createElement(_todo_list_item2.default, {
           key: todo.id,
           todo: todo,
-          removeTodo: removeTodo
+          deleteTodo: deleteTodo
         });
       });
 
       return _react2.default.createElement(
         'div',
-        null,
+        { className: 'todo-list' },
         _react2.default.createElement(
           'ul',
           null,
@@ -488,7 +562,7 @@ var TodoList = function (_React$Component) {
         _react2.default.createElement(
           'div',
           null,
-          _react2.default.createElement(_todo_form2.default, { receiveTodo: this.props.receiveTodo })
+          _react2.default.createElement(_todo_form_container2.default, null)
         )
       );
     }
@@ -540,17 +614,11 @@ var mSTP = function mSTP(state) {
 
 var mDTP = function mDTP(dispatch) {
   return {
-    receiveTodo: function receiveTodo(todo) {
-      return dispatch((0, _todo_actions.receiveTodo)(todo));
-    },
-    removeTodo: function removeTodo(todo) {
-      return dispatch((0, _todo_actions.removeTodo)(todo));
-    },
     requestTodos: function requestTodos() {
       return dispatch((0, _todo_actions.fetchTodos)());
     },
-    createTodo: function createTodo(todo) {
-      return dispatch((0, _todo_actions.createTodo)(todo));
+    deleteTodo: function deleteTodo(todo) {
+      return dispatch((0, _todo_actions.deleteTodo)(todo));
     }
   };
 };
@@ -606,13 +674,13 @@ var TodoListItem = function (_React$Component) {
         { className: 'todo-list-item' },
         _react2.default.createElement(
           'li',
-          null,
+          { className: 'todo-list-item-title' },
           this.props.todo.title
         ),
         _react2.default.createElement(
           'button',
           { onClick: function onClick() {
-              return _this2.props.removeTodo(_this2.props.todo);
+              return _this2.props.deleteTodo(_this2.props.todo);
             } },
           'Delete Todo'
         )
@@ -743,13 +811,11 @@ var todosReducer = function todosReducer() {
   var action = arguments[1];
 
   Object.freeze(state);
-  var nextState = {};
+  var nextState = void 0;
 
   switch (action.type) {
     case _todo_actions.RECEIVE_TODOS:
-      action.todos.forEach(function (todo) {
-        nextState[action.id] = todo;
-      });
+      nextState = (0, _merge2.default)({}, state, action.todos);
       return nextState;
     case _todo_actions.RECEIVE_TODO:
       var newTodo = _defineProperty({}, action.todo.id, action.todo);
@@ -910,6 +976,13 @@ var createTodo = exports.createTodo = function createTodo(todo) {
     method: 'POST',
     url: '/api/todos',
     data: todo
+  });
+};
+
+var deleteTodo = exports.deleteTodo = function deleteTodo(todo) {
+  return $.ajax({
+    method: 'DELETE',
+    url: '/api/todos/' + todo.id
   });
 };
 

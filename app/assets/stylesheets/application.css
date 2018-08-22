@@ -20,18 +20,44 @@
   font: 'Noto Serif';
 }
 
+.todo-list {
+  display: flex;
+  justify-content: space-around;
+  max-width: 600px;
+
+  > li {
+    padding-bottom: 20px;
+  }
+}
+
+.todo-list-item-title {
+  padding-right: 25px;
+}
+
 #root {
   margin-left: 50px;
 }
 
 .todo-list-item{
   display: flex;
+  font-size: 18px
 }
 
 .todo-form {
   display: flex;
   flex-direction: column;
+  border: 2px solid grey;
+  padding: 20px;
+  font-size: 18px;
+}
 
+.todo-form-header {
+  font-size: 24px;
+  padding-bottom: 10px;
+}
+
+label {
+  padding-bottom: 10px;
 }
 
 .create-todo-button {

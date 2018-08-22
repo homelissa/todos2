@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import TodoList from './todo_list';
 import allTodos from '../../reducers/selectors';
-import { receiveTodos, receiveTodo, removeTodo, fetchTodos, createTodo, fetchTodo } from '../../actions/todo_actions';
+import { deleteTodo, fetchTodos } from '../../actions/todo_actions';
 
 
 // Provider gives components access to the Redux store, so that the components
@@ -12,10 +12,8 @@ const mSTP = state => ({
 });
 
 const mDTP = dispatch => ({
-  receiveTodo: todo => dispatch(receiveTodo(todo)),
-  removeTodo: todo => dispatch(removeTodo(todo)),
   requestTodos: () => dispatch(fetchTodos()),
-  createTodo: todo => dispatch(createTodo(todo))
+  deleteTodo: todo => dispatch(deleteTodo(todo))
 });
 
 export default connect(
