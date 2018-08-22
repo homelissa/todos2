@@ -99,7 +99,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.deleteTodo = exports.createTodo = exports.fetchTodo = exports.fetchTodos = exports.removeTodo = exports.receiveTodo = exports.receiveTodos = exports.REMOVE_TODO = exports.RECEIVE_TODO = exports.RECEIVE_TODOS = undefined;
+exports.updateTodo = exports.deleteTodo = exports.createTodo = exports.fetchTodo = exports.fetchTodos = exports.removeTodo = exports.receiveTodo = exports.receiveTodos = exports.REMOVE_TODO = exports.RECEIVE_TODO = exports.RECEIVE_TODOS = undefined;
 
 var _todo_api_util = __webpack_require__(/*! ../util/todo_api_util */ "./frontend/util/todo_api_util.js");
 
@@ -164,6 +164,14 @@ var deleteTodo = exports.deleteTodo = function deleteTodo(todo) {
   };
 };
 
+var updateTodo = exports.updateTodo = function updateTodo(todo) {
+  return function (dispatch) {
+    return TodoAPIUtil.updateTodo(todo).then(function (todo) {
+      return dispatch(receiveTodo(todo));
+    });
+  };
+};
+
 /***/ }),
 
 /***/ "./frontend/app.jsx":
@@ -192,6 +200,10 @@ var _todo_show_container = __webpack_require__(/*! ./components/todos/todo_show_
 
 var _todo_show_container2 = _interopRequireDefault(_todo_show_container);
 
+var _todo_edit_container = __webpack_require__(/*! ./components/todos/todo_edit_container */ "./frontend/components/todos/todo_edit_container.jsx");
+
+var _todo_edit_container2 = _interopRequireDefault(_todo_edit_container);
+
 var _index = __webpack_require__(/*! ./components/index */ "./frontend/components/index.jsx");
 
 var _index2 = _interopRequireDefault(_index);
@@ -206,7 +218,8 @@ var App = function App() {
     null,
     _react2.default.createElement(_index2.default, null),
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _todo_list_container2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/todos/:todoId', component: _todo_show_container2.default })
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/todos/:todoId', component: _todo_show_container2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/todos/:todoId/edit', component: _todo_edit_container2.default })
   );
 };
 
@@ -317,6 +330,178 @@ var Root = function Root(_ref) {
 };
 
 exports.default = Root;
+
+/***/ }),
+
+/***/ "./frontend/components/todos/todo_edit_container.jsx":
+/*!***********************************************************!*\
+  !*** ./frontend/components/todos/todo_edit_container.jsx ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _todo_edit_form = __webpack_require__(/*! ./todo_edit_form */ "./frontend/components/todos/todo_edit_form.jsx");
+
+var _todo_edit_form2 = _interopRequireDefault(_todo_edit_form);
+
+var _todo_actions = __webpack_require__(/*! ../../actions/todo_actions */ "./frontend/actions/todo_actions.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mSTP = function mSTP(state, ownProps) {
+  return {
+    todo: state.todos[ownProps.match.params.todoId]
+  };
+};
+
+var mDTP = function mDTP(dispatch) {
+  return {
+    updateTodo: function updateTodo(todo) {
+      return dispatch((0, _todo_actions.updateTodo)(todo));
+    },
+    fetchTodo: function fetchTodo(id) {
+      return dispatch((0, _todo_actions.fetchTodo)(id));
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mSTP, mDTP)(_todo_edit_form2.default);
+
+/***/ }),
+
+/***/ "./frontend/components/todos/todo_edit_form.jsx":
+/*!******************************************************!*\
+  !*** ./frontend/components/todos/todo_edit_form.jsx ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TodoEditForm = function (_React$Component) {
+  _inherits(TodoEditForm, _React$Component);
+
+  function TodoEditForm(props) {
+    _classCallCheck(this, TodoEditForm);
+
+    var _this = _possibleConstructorReturn(this, (TodoEditForm.__proto__ || Object.getPrototypeOf(TodoEditForm)).call(this, props));
+
+    _this.state = _this.props.todo;
+    _this.handleSubmit = _this.handleSubmit.bind(_this);
+    return _this;
+  }
+
+  _createClass(TodoEditForm, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.fetchTodo(this.props.match.params.todoId);
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      if (this.props.todo !== newProps.todo) {
+        this.setState(newProps.todo);
+      }
+    }
+  }, {
+    key: 'update',
+    value: function update(field) {
+      var _this2 = this;
+
+      return function (e) {
+        _this2.setState(_defineProperty({}, field, e.target.value));
+      };
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      var _this3 = this;
+
+      e.preventDefault();
+      this.props.updateTodo(this.state).then(function () {
+        return _this3.props.history.push('/todos/' + _this3.props.match.params.todoId);
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (!this.props.todo) {
+        return null;
+      }
+
+      if (!this.state) {
+        return null;
+      }
+
+      return _react2.default.createElement(
+        'form',
+        { className: 'todo-form', onSubmit: this.handleSubmit },
+        _react2.default.createElement(
+          'div',
+          { className: 'todo-form-header' },
+          'Edit Todo!'
+        ),
+        _react2.default.createElement(
+          'label',
+          null,
+          'Title:',
+          _react2.default.createElement('input', {
+            placeholder: 'buy milk',
+            value: this.props.title,
+            onChange: this.update('title') })
+        ),
+        _react2.default.createElement(
+          'label',
+          null,
+          'Body:',
+          _react2.default.createElement('textarea', {
+            placeholder: '2%',
+            value: this.props.body,
+            onChange: this.update('body') })
+        ),
+        _react2.default.createElement(
+          'button',
+          { className: 'create-todo-button' },
+          'Submit'
+        )
+      );
+    }
+  }]);
+
+  return TodoEditForm;
+}(_react2.default.Component);
+
+exports.default = TodoEditForm;
 
 /***/ }),
 
@@ -630,6 +815,9 @@ var mDTP = function mDTP(dispatch) {
     },
     deleteTodo: function deleteTodo(todo) {
       return dispatch((0, _todo_actions.deleteTodo)(todo));
+    },
+    updateTodo: function updateTodo(todo) {
+      return dispatch((0, _todo_actions.updateTodo)(todo));
     }
   };
 };
@@ -693,6 +881,11 @@ var TodoListItem = function (_React$Component) {
             { to: '/todos/' + this.props.todo.id },
             this.props.todo.title
           )
+        ),
+        _react2.default.createElement(
+          _reactRouterDom.Link,
+          { className: 'todo-list-item-link', to: '/todos/' + this.props.todo.id + '/edit' },
+          'Edit Todo'
         ),
         _react2.default.createElement(
           'button',
@@ -1119,6 +1312,14 @@ var deleteTodo = exports.deleteTodo = function deleteTodo(todo) {
   return $.ajax({
     method: 'DELETE',
     url: '/api/todos/' + todo.id
+  });
+};
+
+var updateTodo = exports.updateTodo = function updateTodo(todo) {
+  return $.ajax({
+    method: 'PATCH',
+    url: 'api/todos/' + todo.id,
+    data: todo
   });
 };
 

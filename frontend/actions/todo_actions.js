@@ -33,3 +33,7 @@ export const createTodo = todo => dispatch => (
 export const deleteTodo = todo => dispatch => (
   TodoAPIUtil.deleteTodo(todo).then(todo => dispatch(removeTodo(todo)))
 );
+
+export const updateTodo = todo => dispatch => (
+  TodoAPIUtil.updateTodo(todo).then(todo => dispatch(receiveTodo(todo)))
+)

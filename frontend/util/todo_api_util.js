@@ -26,3 +26,11 @@ export const deleteTodo = todo => (
     url: `/api/todos/${todo.id}`
   })
 );
+
+export const updateTodo = todo => {
+  return $.ajax({
+    method: 'PATCH',
+    url: `api/todos/${todo.id}`,
+    data: todo
+  })
+}

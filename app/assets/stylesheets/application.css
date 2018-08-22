@@ -27,7 +27,7 @@
 .todo-list {
   display: flex;
   justify-content: space-around;
-  max-width: 600px;
+  max-width: 800px;
 
   > li {
     padding-bottom: 20px;
@@ -35,6 +35,10 @@
 }
 
 .todo-list-item-title {
+  padding-right: 25px;
+}
+
+.todo-list-item-link {
   padding-right: 25px;
 }
 
