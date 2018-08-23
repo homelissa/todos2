@@ -7,7 +7,7 @@ const mSTP = (state, ownProps) => ({
 })
 
 const mDTP = dispatch => ({
-  fetchTodo: () => dispatch(fetchTodo)
+  fetchTodo: (id) => dispatch(fetchTodo(id))
 })
 
 export default connect(

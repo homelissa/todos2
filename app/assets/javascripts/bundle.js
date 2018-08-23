@@ -218,8 +218,8 @@ var App = function App() {
     null,
     _react2.default.createElement(_index2.default, null),
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _todo_list_container2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/todos/:todoId', component: _todo_show_container2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/todos/:todoId/edit', component: _todo_edit_container2.default })
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/todos/:todoId/edit', component: _todo_edit_container2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/todos/:todoId', component: _todo_show_container2.default })
   );
 };
 
@@ -358,9 +358,8 @@ var _todo_actions = __webpack_require__(/*! ../../actions/todo_actions */ "./fro
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var mSTP = function mSTP(state, ownProps) {
-  return {
-    todo: state.todos[ownProps.match.params.todoId]
-  };
+  console.log(state);
+  return { todo: state.todos[ownProps.match.params.todoId] };
 };
 
 var mDTP = function mDTP(dispatch) {
@@ -456,6 +455,7 @@ var TodoEditForm = function (_React$Component) {
     key: 'render',
     value: function render() {
       if (!this.props.todo) {
+        console.log(this.props);
         return null;
       }
 
@@ -476,8 +476,7 @@ var TodoEditForm = function (_React$Component) {
           null,
           'Title:',
           _react2.default.createElement('input', {
-            placeholder: 'buy milk',
-            value: this.props.title,
+            value: this.state.title,
             onChange: this.update('title') })
         ),
         _react2.default.createElement(
@@ -485,8 +484,7 @@ var TodoEditForm = function (_React$Component) {
           null,
           'Body:',
           _react2.default.createElement('textarea', {
-            placeholder: '2%',
-            value: this.props.body,
+            value: this.state.body,
             onChange: this.update('body') })
         ),
         _react2.default.createElement(
@@ -570,16 +568,12 @@ var TodoForm = function (_React$Component) {
   }, {
     key: 'handleSubmit',
     value: function handleSubmit(e) {
-      var _this3 = this;
-
       e.preventDefault();
       var todo = Object.assign({}, this.state);
-      this.props.createTodo({ todo: todo }).then(function () {
-        return _this3.setState({
-          title: "",
-          body: ""
-        });
-      });
+      this.props.createTodo(todo).then(this.setState({
+        title: "",
+        body: ""
+      }));
     }
 
     // handleSubmit(e) {
@@ -612,7 +606,7 @@ var TodoForm = function (_React$Component) {
           'Title:',
           _react2.default.createElement('input', {
             placeholder: 'buy milk',
-            value: this.props.title,
+            value: this.state.title,
             onChange: this.update('title') })
         ),
         _react2.default.createElement(
@@ -621,7 +615,7 @@ var TodoForm = function (_React$Component) {
           'Body:',
           _react2.default.createElement('textarea', {
             placeholder: '2%',
-            value: this.props.body,
+            value: this.state.body,
             onChange: this.update('body') })
         ),
         _react2.default.createElement(
@@ -936,24 +930,39 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var TodoShow = function (_React$Component) {
   _inherits(TodoShow, _React$Component);
 
-  function TodoShow() {
+  function TodoShow(props) {
     _classCallCheck(this, TodoShow);
 
-    return _possibleConstructorReturn(this, (TodoShow.__proto__ || Object.getPrototypeOf(TodoShow)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (TodoShow.__proto__ || Object.getPrototypeOf(TodoShow)).call(this, props));
+
+    _this.state = _this.props.todo;
+    return _this;
   }
 
   _createClass(TodoShow, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      debugger;
       this.props.fetchTodo(this.props.match.params.todoId);
+    }
+
+    // render only knows when the state is updated, not the props
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      debugger;
+      if (this.props.todo !== newProps.todo) {
+        console.log('inside receive ');
+        this.setState(newProps.todo);
+      }
     }
   }, {
     key: 'render',
     value: function render() {
-      var todo = this.props.todo;
+      // const { todo } = this.state;
 
-
-      if (!todo) {
+      if (!this.props.todo) {
         console.log('hi');
         return null;
       }
@@ -964,12 +973,12 @@ var TodoShow = function (_React$Component) {
         _react2.default.createElement(
           'h4',
           null,
-          todo.title
+          this.state.title
         ),
         _react2.default.createElement(
           'h4',
           null,
-          todo.body
+          this.state.body
         )
       );
     }
@@ -1014,8 +1023,8 @@ var mSTP = function mSTP(state, ownProps) {
 
 var mDTP = function mDTP(dispatch) {
   return {
-    fetchTodo: function fetchTodo() {
-      return dispatch(_todo_actions.fetchTodo);
+    fetchTodo: function fetchTodo(id) {
+      return dispatch((0, _todo_actions.fetchTodo)(id));
     }
   };
 };
@@ -1304,7 +1313,7 @@ var createTodo = exports.createTodo = function createTodo(todo) {
   return $.ajax({
     method: 'POST',
     url: '/api/todos',
-    data: todo
+    data: { todo: todo }
   });
 };
 
@@ -1319,7 +1328,7 @@ var updateTodo = exports.updateTodo = function updateTodo(todo) {
   return $.ajax({
     method: 'PATCH',
     url: 'api/todos/' + todo.id,
-    data: todo
+    data: { todo: todo }
   });
 };
 

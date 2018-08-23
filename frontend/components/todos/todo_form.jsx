@@ -20,8 +20,8 @@ class TodoForm extends React.Component {
   handleSubmit(e) {
    e.preventDefault();
    const todo = Object.assign({}, this.state);
-   this.props.createTodo({ todo }).then(
-     () => this.setState({
+   this.props.createTodo(todo).then(
+      this.setState({
        title: "",
        body: ""
      })
@@ -49,7 +49,7 @@ class TodoForm extends React.Component {
         <label>Title:
           <input
             placeholder='buy milk'
-            value={this.props.title}
+            value={this.state.title}
             onChange={this.update('title')} />
 
         </label>
@@ -57,7 +57,7 @@ class TodoForm extends React.Component {
         <label>Body:
           <textarea
             placeholder='2%'
-            value={this.props.body}
+            value={this.state.body}
             onChange={this.update('body')} >
           </textarea>
         </label>

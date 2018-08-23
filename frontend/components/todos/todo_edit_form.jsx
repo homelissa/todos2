@@ -30,6 +30,7 @@ class TodoEditForm extends React.Component {
 
   render() {
     if (!this.props.todo) {
+      console.log(this.props)
       return null;
     }
 
@@ -37,31 +38,29 @@ class TodoEditForm extends React.Component {
       return null;
     }
 
+    return(
+      <form className='todo-form' onSubmit={this.handleSubmit}>
+        <div className='todo-form-header'>Edit Todo!</div>
+        <label>Title:
+          <input
+            value={this.state.title}
+            onChange={this.update('title')} />
 
-        return(
-          <form className='todo-form' onSubmit={this.handleSubmit}>
-            <div className='todo-form-header'>Edit Todo!</div>
-            <label>Title:
-              <input
-                placeholder='buy milk'
-                value={this.props.title}
-                onChange={this.update('title')} />
+        </label>
 
-            </label>
+        <label>Body:
+          <textarea
+            value={this.state.body}
+            onChange={this.update('body')} >
+          </textarea>
+        </label>
 
-            <label>Body:
-              <textarea
-                placeholder='2%'
-                value={this.props.body}
-                onChange={this.update('body')} >
-              </textarea>
-            </label>
+        <button className='create-todo-button'>Submit</button>
 
-            <button className='create-todo-button'>Submit</button>
-
-          </form>
-        )
+      </form>
+    )
   }
+
 }
 
 export default TodoEditForm;

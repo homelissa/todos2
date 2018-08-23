@@ -2,9 +2,12 @@ import { connect } from 'react-redux';
 import TodoEditForm from './todo_edit_form';
 import { updateTodo, fetchTodo } from '../../actions/todo_actions';
 
-const mSTP = (state, ownProps) => ({
-  todo: state.todos[ownProps.match.params.todoId]
-})
+const mSTP = (state, ownProps) => {
+  console.log(state);
+    return (
+      { todo: state.todos[ownProps.match.params.todoId] }
+    )
+}
 
 const mDTP = dispatch => ({
   updateTodo: todo => dispatch(updateTodo(todo)),

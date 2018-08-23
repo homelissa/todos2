@@ -9,8 +9,8 @@ const App = () => (
   <div>
     <Index />
       <Route exact path='/' component={ToDoListContainer} />
-      <Route exact path='/todos/:todoId' component={TodoShowContainer} />
       <Route exact path='/todos/:todoId/edit' component={TodoEditContainer} />
+      <Route exact path='/todos/:todoId' component={TodoShowContainer} />
   </div>
 );
 
