@@ -271,7 +271,7 @@ var Index = function (_React$Component) {
     value: function render() {
       return _react2.default.createElement(
         'h1',
-        null,
+        { className: 'header' },
         _react2.default.createElement(
           _reactRouterDom.Link,
           { to: '/' },
@@ -423,6 +423,7 @@ var TodoEditForm = function (_React$Component) {
   _createClass(TodoEditForm, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      debugger;
       this.props.fetchTodo(this.props.match.params.todoId);
     }
   }, {
@@ -447,7 +448,8 @@ var TodoEditForm = function (_React$Component) {
       var _this3 = this;
 
       e.preventDefault();
-      this.props.updateTodo(this.state).then(function () {
+      var todo = Object.assign({}, this.state);
+      this.props.updateTodo(todo).then(function () {
         return _this3.props.history.push('/todos/' + _this3.props.match.params.todoId);
       });
     }
@@ -594,7 +596,7 @@ var TodoForm = function (_React$Component) {
 
       return _react2.default.createElement(
         'form',
-        { className: 'todo-form', onSubmit: this.handleSubmit },
+        { className: 'todo-form create-todo-form', onSubmit: this.handleSubmit },
         _react2.default.createElement(
           'div',
           { className: 'todo-form-header' },
@@ -749,11 +751,7 @@ var TodoList = function (_React$Component) {
           null,
           todoItems
         ),
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(_todo_form_container2.default, null)
-        )
+        _react2.default.createElement(_todo_form_container2.default, null)
       );
     }
   }]);
@@ -865,16 +863,12 @@ var TodoListItem = function (_React$Component) {
       var _this2 = this;
 
       return _react2.default.createElement(
-        'div',
+        'li',
         { className: 'todo-list-item' },
         _react2.default.createElement(
-          'div',
-          { className: 'todo-list-item-title' },
-          _react2.default.createElement(
-            _reactRouterDom.Link,
-            { to: '/todos/' + this.props.todo.id },
-            this.props.todo.title
-          )
+          _reactRouterDom.Link,
+          { to: '/todos/' + this.props.todo.id },
+          this.props.todo.title
         ),
         _react2.default.createElement(
           _reactRouterDom.Link,

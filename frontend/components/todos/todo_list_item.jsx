@@ -10,11 +10,11 @@ class TodoListItem extends React.Component {
   render() {
 
     return(
-      <div className='todo-list-item'>
-        <div className='todo-list-item-title'><Link to={`/todos/${this.props.todo.id}`}>{this.props.todo.title}</Link></div>
+      <li className='todo-list-item'>
+        <Link to={`/todos/${this.props.todo.id}`}>{this.props.todo.title}</Link>
         <Link className='todo-list-item-link' to={`/todos/${this.props.todo.id}/edit`}>Edit Todo</Link>
         <button onClick={ () => this.props.deleteTodo(this.props.todo)}>Delete Todo</button>
-      </div>
+      </li>
     )
   }
 }

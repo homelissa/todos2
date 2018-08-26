@@ -21,7 +21,7 @@ class TodoList extends React.Component {
     return(
       <div className='todo-list'>
         <ul>{ todoItems }</ul>
-        <div><TodoFormContainer /></div>
+        <TodoFormContainer />
       </div>
     )
   }

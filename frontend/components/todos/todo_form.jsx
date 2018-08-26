@@ -44,7 +44,7 @@ class TodoForm extends React.Component {
 
 
     return(
-      <form className='todo-form' onSubmit={this.handleSubmit}>
+      <form className='todo-form create-todo-form' onSubmit={this.handleSubmit}>
         <div className='todo-form-header'>Create New Todo!</div>
         <label>Title:
           <input

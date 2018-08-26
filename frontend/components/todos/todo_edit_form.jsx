@@ -8,6 +8,7 @@ class TodoEditForm extends React.Component {
   }
 
   componentDidMount() {
+    debugger
     this.props.fetchTodo(this.props.match.params.todoId)
   }
 
@@ -25,7 +26,8 @@ class TodoEditForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.updateTodo(this.state).then(() => this.props.history.push(`/todos/${this.props.match.params.todoId}`))
+    const todo = Object.assign({}, this.state)
+    this.props.updateTodo(todo).then(() => this.props.history.push(`/todos/${this.props.match.params.todoId}`))
   }
 
   render() {

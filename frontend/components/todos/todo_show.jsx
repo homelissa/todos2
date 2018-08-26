@@ -31,7 +31,6 @@ class TodoShow extends React.Component{
 
 
 
-
     return(
       <div>
         <h4>{this.state.title}</h4>
